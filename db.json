@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "id": "7493",
+      "email": "amit",
+      "password": "123",
+      "name": "amit"
+    },
+    {
+      "id": "e7c8",
+      "email": "aman@gmail.com",
+      "password": "111",
+      "name": "aman"
+    },
+    {
+      "email": "anmol",
+      "password": "anmol",
+      "name": "Anmol@gmail.com",
+      "id": "_3tzN2G"
+    },
+    {
+      "email": "ashu@gmail.com",
+      "password": "ashu",
+      "name": "ashu",
+      "id": "izExvAl"
+    },
+    {
+      "email": "singh@gmail.com",
+      "password": "singh",
+      "name": "singh",
+      "id": "gIHzpXj"
+    }
+  ],
+  "tasks": [],
+  "products": []
+}
