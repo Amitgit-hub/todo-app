@@ -100,9 +100,15 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  //removing the user data from local storgae and user state
+  const logout= ()=>{
+    localStorage.removeItem("toDoUser")
+    setUser(null)
+    navigate('/login')
+  }
   return (
     <AuthContext.Provider
-      value={{ register, message, setMessage, login, user }}
+      value={{ register, message, setMessage, login, user,logout }}
     >
       {children}
     </AuthContext.Provider>
