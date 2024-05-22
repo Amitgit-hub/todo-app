@@ -3,6 +3,7 @@ import TaskContext from "../context/TaskContext";
 import AuthContext from "../auth/AuthContext";
 
 function TaskForm(props) {
+    const {isUpdate, setIsUpdate} = props
     const [formData,setFormData]= useState()
     const {message,setMessage,addTask}= useContext(TaskContext)
     const {user} =useContext(AuthContext)
@@ -22,11 +23,15 @@ function TaskForm(props) {
         addTask(formData)
     }
 
+    const cancelUpdate=(e)=>{
+      e.preventDefault()
+      setIsUpdate(false)
 
+    }
 
   return (
     <div className="w-50">
-      <h4 className="text-white"> Create Task</h4>
+      <h4 className="text-white">{isUpdate?"Update Task":"Create Task"}</h4>
       <div className="card p-3">
         <form>
           <div className="mb-3">
@@ -51,7 +56,14 @@ function TaskForm(props) {
             />
           </div>
           <p>{message}</p>
+          { isUpdate?
+            <>
+            <button className="btn btn-primary">Update Task</button>
+            <button className="btn btn-warning ms-2" onClick={cancelUpdate}>Cancel</button>
+            </>
+            :
           <button className="btn btn-primary" onClick={submitForm}>Create Task</button>
+          }
         </form>
       </div>
     </div>
