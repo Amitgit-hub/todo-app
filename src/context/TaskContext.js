@@ -23,6 +23,25 @@ export const TaskProvider = ({children})=>{
         const response = await fetch("http://localhost:5000/tasks", config)
         if(response.status===201){
             setMessage("Task Created Successfully")
+            getAllTasks(user.id)
+        } else {
+            setMessage("Something Went Wrong")
+        }
+    }
+
+    //UPDATE TASK
+    const updateTask=async(formData)=>{
+        const config= {
+            method:"PATCH",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify(formData)
+        }
+        const response = await fetch(`http://localhost:5000/tasks/${formData.id}`, config)
+        if(response.status===200){
+            setMessage("Task Updated Successfully")
+            getAllTasks(user.id)
         } else {
             setMessage("Something Went Wrong")
         }
@@ -50,7 +69,7 @@ export const TaskProvider = ({children})=>{
     },[user])
 
     return (
-        <TaskContext.Provider value={{message,setMessage,addTask,latestTask,recentTasks,allTasks}}>{
+        <TaskContext.Provider value={{message,setMessage,addTask,latestTask,recentTasks,allTasks,updateTask}}>{
             children}
             </TaskContext.Provider>
     )
