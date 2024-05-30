@@ -8,16 +8,16 @@ function TaskForm(props) {
     description:"",
     duedate:""
   }
-    const {isUpdate, setIsUpdate,data} = props
+    const {isUpdate, setIsUpdate,data, isPopup, closeBtn} = props
     const [formData,setFormData]= useState(init)
     const {message,setMessage,addTask,updateTask}= useContext(TaskContext)
     const {user} =useContext(AuthContext)
 
     useEffect(()=>{
-      if(isUpdate){
+      if(isUpdate && data){
         setFormData(data)
       }
-    },[isUpdate])
+    },[isUpdate ,data])
 
 
     const handleChange =(e)=>{
@@ -40,9 +40,14 @@ function TaskForm(props) {
 
     const cancelUpdate=(e)=>{
       e.preventDefault()
-      setIsUpdate(false)
+      if(isPopup){
+        closeBtn.current.click()
+      } else {
+        setIsUpdate(false)        
+      }
+      
       setFormData(init)
-
+      
     }
     const onUpdate=(e)=>{
       e.preventDefault()
@@ -54,7 +59,7 @@ function TaskForm(props) {
     }
 
   return (
-    <div className="w-50">
+    <div className="p-3">
       <h4 className="text-white">{isUpdate?"Update Task":"Create Task"}</h4>
       <div className="card p-3">
         <form>

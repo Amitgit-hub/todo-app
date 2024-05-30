@@ -1,24 +1,46 @@
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { Link } from "react-router-dom";
 import TaskContext from "../context/TaskContext";
 import { formatDate } from "../helper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faPenToSquare,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import Popup from "../components/Popup";
 
-const reducer = (state,action)=>{
-  switch(action.type){
-    case "view": return {isType:"view", data:action.payload}
-    case "edit": return {isType:"edit", data:action.payload}
-    case "delete": return {isType:"delete", data:action.payload}
-    default: return state
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "view":
+      return { isType: "view", data: action.payload };
+    case "edit":
+      return { isType: "edit", data: action.payload };
+    case "delete":
+      return { isType: "delete", data: action.payload };
+    default:
+      return state;
   }
-
-}
+};
 
 function TaskList(props) {
   const { allTasks } = useContext(TaskContext);
-  const [state, dispatch] = useReducer(reducer,{isType:"", data:null})
+  const [state, dispatch] = useReducer(reducer, { isType: "", data: null });
+
+  const [taskData, setTaskData] = useState(null);
+  useEffect(() => {
+    if (allTasks) {
+      setTaskData(allTasks);
+    }
+  }, [allTasks]);
+
+  const handleSearch = (e) => {
+    let filteredTask = allTasks.filter((task) => {
+
+      return task.title.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setTaskData(filteredTask);
+  };
   return (
     <div className="container py-5">
       <div className="bg-primary text-white p-3">
@@ -27,6 +49,9 @@ function TaskList(props) {
           <Link to="/create-task" className="btn btn-info ms-auto">
             Create Task
           </Link>
+        </div>
+        <div className="py-3">
+          <input type="text" className="form-control" onChange={handleSearch} />
         </div>
         <div className="p-3">
           {/* header row */}
@@ -37,30 +62,58 @@ function TaskList(props) {
             <div className="col-2">Due Date</div>
             <div className="col-2">Actions</div>
           </div>
-          {allTasks ? allTasks.map((task) => {
-            return (
-                <div key={task.id} className="row bg-secondary mb-2 rounded-2 align-items-center">
-            <div className="col-1">{task.id}</div>
-            <div className="col-3">{task.title}</div>
-            <div className="col-4">{task.description}</div>
-            <div className="col-2">{formatDate(task.duedate)}</div>
-            <div className="col-2">
-                <span className="px-2" data-bs-toggle="modal" data-bs-target="#todo-modal" onClick={()=>{dispatch({type:"view",payload:task})}}>
-                    <FontAwesomeIcon icon={faEye}/>
-                </span>
-                <span className="px-2" data-bs-toggle="modal" data-bs-target="#todo-modal" onClick={()=>{dispatch({type:"edit",payload:task})}}>
-                <FontAwesomeIcon icon={faPenToSquare}/>
-                </span>
-                <span className="px-2" data-bs-toggle="modal" data-bs-target="#todo-modal" onClick={()=>{dispatch({type:"delete",payload:task})}}>
-                <FontAwesomeIcon icon={faTrash} />
-                </span>
-            </div>
-          </div>
-            )
-          }) : <p>No Tasks to display</p>}
+          {taskData ? (
+            taskData.map((task) => {
+              return (
+                <div
+                  key={task.id}
+                  className="row bg-secondary mb-2 rounded-2 align-items-center"
+                >
+                  <div className="col-1">{task.id}</div>
+                  <div className="col-3">{task.title}</div>
+                  <div className="col-4">{task.description}</div>
+                  <div className="col-2">{formatDate(task.duedate)}</div>
+                  <div className="col-2">
+                    <span
+                      className="px-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#todo-modal"
+                      onClick={() => {
+                        dispatch({ type: "view", payload: task });
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faEye} />
+                    </span>
+                    <span
+                      className="px-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#todo-modal"
+                      onClick={() => {
+                        dispatch({ type: "edit", payload: task });
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </span>
+                    <span
+                      className="px-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#todo-modal"
+                      onClick={() => {
+                        dispatch({ type: "delete", payload: task });
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </span>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <p>No Tasks to display</p>
+          )}
         </div>
       </div>
-      <Popup taskData={state}/>
+      <Popup taskData={state} />
     </div>
   );
 }
